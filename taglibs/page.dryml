@@ -13,13 +13,15 @@
 
 Attributes:
 
-- `bottom-load-javascript` - if set, will load Javascript at the bottom of the page rather than in head
-- nav-location: `top`, `sub`.   Where do you want your main-nav located.   `top` merges it into the top bar, `sub` gives it its own bar. `top` is the default option.
+- title: Title of the page. Typically the same string as used for the menu item associated with this page.
+- full-title: Used to set the title meta property in the page header. Default value is the title, followed by a : followed by the app name.
+- bottom-load-javascript: If set, will load Javascript at the bottom of the page rather than in head.
+- nav-location: `top`, `sub`.   Where do you want your main-nav located.   `top` merges it into the top bar, `sub` gives it its own bar. Default is `top`.
 - content-size: The width, in the bootstrap grid system for the main content.  Default is 12 unless there is an aside, in which case the default is 9.
-- aside-size: The width, in the bootstrap grid system for the aside content.  Default is 12 - content_size.
-- aside-location
+- aside-size: The width, in the bootstrap grid system for the aside content.  Default is 12 - content_size. If set to 0, the aside will be removed from the layout.
+- aside-location: `left`, `right`, `nowhere`. Where do you want the aside to be displayed?. Default is `right`.
 
-Make your choice global with:
+Make your choice for the nav-location setting global with:
 
     <extend tag="page">
       <old-page merge nav-location="sub">
@@ -72,7 +74,8 @@ Make your choice global with:
           </div>
         </div>
         <%
-          if all_parameters[:aside]
+          aside_enabled = (attributes[:aside_size]!="0") && all_parameters[:aside] # && !all_parameters[:aside_replacement]
+          if (aside_enabled)
             attributes[:content_size] ||= "9"
             attributes[:aside_size] ||= (12 - attributes[:content_size].to_i).to_s
             aside_span = "span" + attributes[:aside_size]
@@ -83,7 +86,7 @@ Make your choice global with:
         %>
         <div class="container bootstrap-content" param="container">
           <div class="row" param="main-row">
-            <div class="#{aside_span}" if="&all_parameters[:aside] && aside_location=='left'" param="aside-column">
+            <div class="#{aside_span}" if="&aside_enabled && aside_location=='left'" param="aside-column">
               <div class="well">
                 <section param="aside"/>
               </div>
@@ -96,7 +99,7 @@ Make your choice global with:
                 </section>
               </section>
             </div>
-            <div class="#{aside_span}" if="&all_parameters[:aside] && aside_location=='right'" param="aside-column">
+            <div class="#{aside_span}" if="&aside_enabled && aside_location=='right'" param="aside-column">
               <div class="well">
                 <section param="aside"/>
               </div>
