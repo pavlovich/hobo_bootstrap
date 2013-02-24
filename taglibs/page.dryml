@@ -34,11 +34,11 @@ Make your choice for the nav-location setting global with:
     <head param>
       <title param><%= strip_tags full_title %></title>
       <do param="stylesheets"><%# in Hobo <= 1.3, we had other stylesheets here.   Now the asset pipeline is preferred. %>
-        <stylesheet name="#{subsite || 'front'}" param="app-stylesheet"/>
+        <stylesheet name="#{subsite || 'public'}" param="app-stylesheet"/>
       </do>
 
       <do param="scripts" if="&!bottom_load_javascript"><%# in Hobo <= 1.3, we had other javascripts here.   Now the asset pipeline is preferred. %>
-        <javascript param="application-javascript" name="#{subsite || 'front'}"/>
+        <javascript param="application-javascript" name="#{subsite || 'public'}"/>
         <do param="custom-scripts">
           <script type="text/javascript">
             <do param="custom-javascript"/>
@@ -129,7 +129,7 @@ Make your choice for the nav-location setting global with:
                   head.appendChild(script);
                 }
 
-                getScript('<%= asset_path((subsite || 'front')+'.js')%>',function(){
+                getScript('<%= asset_path((subsite || 'public')+'.js')%>',function(){
                   <do param="custom-javascript"/>
                 });
               })();
